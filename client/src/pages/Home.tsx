@@ -1,33 +1,78 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
-import { Streamdown } from 'streamdown';
+import { getLoginUrl } from "@/const";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 
-/**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Workflow, Frontend Best Practices, Design Guide and Common Pitfalls
- */
 export default function Home() {
-  // The userAuth hooks provides authentication state
-  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
-  let { user, loading, error, isAuthenticated, logout } = useAuth();
+  const { user, loading, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
 
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
+  useEffect(() => {
+    if (!loading && isAuthenticated && user) {
+      // Redirecionar baseado no role do usuário
+      switch (user.role) {
+        case "aluno":
+          setLocation("/aluno");
+          break;
+        case "mentor":
+          setLocation("/mentor");
+          break;
+        case "gestor":
+          setLocation("/gestor");
+          break;
+        default:
+          // Se não tiver role definido, manter na home
+          break;
+      }
+    }
+  }, [loading, isAuthenticated, user, setLocation]);
 
-  // Use APP_LOGO (as image src) and APP_TITLE if needed
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
+  // Se não estiver autenticado, mostrar página de boas-vindas
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="max-w-md w-full mx-auto p-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+          <div className="text-center space-y-6">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+              Órbita Plataforma
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300">
+              Sistema de Gestão de Estudos para o ENEM
+            </p>
+            <div className="pt-4">
+              <Button
+                onClick={() => window.location.href = getLoginUrl()}
+                size="lg"
+                className="w-full"
+              >
+                Entrar na Plataforma
+              </Button>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Faça login para acessar seu dashboard
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback: se estiver autenticado mas não redirecionou
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
-      </main>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+        <p className="text-muted-foreground">Carregando...</p>
+      </div>
     </div>
   );
 }

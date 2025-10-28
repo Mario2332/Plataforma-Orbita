@@ -87,3 +87,7 @@
 - [ ] Relatórios consolidados para mentores
 - [ ] Sistema de mensagens mentor-aluno
 - [ ] Analytics para gestores
+
+
+## Bugs
+- [x] Página inicial mostrando conteúdo de exemplo ao invés de redirecionar para dashboard baseado em role
