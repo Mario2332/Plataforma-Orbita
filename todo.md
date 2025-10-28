@@ -9,33 +9,33 @@
 ## Fase 2: Funcionalidades do Aluno
 
 ### Gestão da Conta
-- [ ] Página de cadastro com nome, email, celular e senha
-- [ ] Sistema de login seguro
-- [ ] Modo noturno/claro (tema)
+- [x] Página de cadastro com nome, email, celular e senha
+- [x] Sistema de login seguro
+- [x] Modo noturno/claro (tema)
 
 ### Dashboard Inicial
-- [ ] Cards de métricas principais (streak, tempo total, questões, último simulado, última redação)
-- [ ] Gráfico de evolução de acertos em simulados
-- [ ] Botões de ação rápida (cronômetro, registrar estudo)
-- [ ] Análise inteligente com sugestões de conteúdos
+- [x] Cards de métricas principais (streak, tempo total, questões, último simulado, última redação)
+- [x] Gráfico de evolução de acertos em simulados
+- [x] Botões de ação rápida (cronômetro, registrar estudo)
+- [x] Análise inteligente com sugestões de conteúdos
 
 ### Registro de Estudos
-- [ ] Formulário de registro manual de estudos
-- [ ] Componente de cronômetro com iniciar/pausar/resetar
-- [ ] Histórico de estudos com tabela ordenável
-- [ ] Edição e exclusão de registros de estudo
+- [x] Formulário de registro manual de estudos
+- [x] Componente de cronômetro com iniciar/pausar/resetar
+- [x] Histórico de estudos com tabela ordenável
+- [x] Edição e exclusão de registros de estudo
 
 ### Análise de Desempenho
-- [ ] Painel de métricas gerais (tempo, questões, acertos, percentual)
+- [x] Painel de métricas gerais (tempo, questões, acertos, percentual)
 - [ ] Heatmap de consistência (90 dias)
-- [ ] Gráficos de barra por matéria (questões, acertos, flashcards)
+- [x] Gráficos de barra por matéria (questões, acertos, flashcards)
 - [ ] Gráficos de pizza (tempo por matéria e área)
 - [ ] Gráfico de linha (acertos vs erros semanal)
 - [ ] Tabelas de pontos fracos (< 50%) e fortes (> 80%)
 
 ### Simulados
-- [ ] Formulário de registro de simulado com todas as áreas
-- [ ] Histórico de simulados com cálculos automáticos
+- [x] Formulário de registro de simulado com todas as áreas
+- [x] Histórico de simulados com cálculos automáticos
 - [ ] Editor de anotações por simulado (Quill.js)
 - [ ] Gráficos de evolução de simulados
 - [ ] Filtros por período (30d, 3m, 6m)
@@ -43,9 +43,9 @@
 ## Fase 3: Funcionalidades do Mentor
 
 ### Gestão de Alunos
-- [ ] Dashboard com lista de alunos
+- [x] Dashboard com lista de alunos
 - [ ] Busca e filtro por nome/email
-- [ ] Adicionar novos alunos
+- [x] Adicionar novos alunos
 - [ ] Editar informações de alunos
 - [ ] Remover alunos
 
@@ -57,14 +57,14 @@
 ## Fase 4: Funcionalidades do Gestor
 
 ### Dashboard de Gestão
-- [ ] Contagem total de alunos na plataforma
-- [ ] Listagem de mentores/clientes
+- [x] Contagem total de alunos na plataforma
+- [x] Listagem de mentores/clientes
 
 ### White-label
-- [ ] Criar e editar mentores
-- [ ] Configurar nome da plataforma por mentor
-- [ ] Upload e configuração de logo por mentor
-- [ ] Configurar cor principal por mentor
+- [x] Criar e editar mentores
+- [x] Configurar nome da plataforma por mentor
+- [x] Upload e configuração de logo por mentor
+- [x] Configurar cor principal por mentor
 
 ## Fase 5: Gráficos e Análises
 - [ ] Integrar biblioteca de gráficos (Recharts)
