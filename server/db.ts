@@ -1,6 +1,27 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { 
+  InsertUser, 
+  users, 
+  gestores, 
+  mentores, 
+  alunos, 
+  estudos, 
+  simulados, 
+  anotacoesMentor,
+  Gestor,
+  Mentor,
+  Aluno,
+  Estudo,
+  Simulado,
+  AnotacaoMentor,
+  InsertGestor,
+  InsertMentor,
+  InsertAluno,
+  InsertEstudo,
+  InsertSimulado,
+  InsertAnotacaoMentor
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -56,8 +77,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.role = user.role;
       updateSet.role = user.role;
     } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
+      values.role = 'gestor';
+      updateSet.role = 'gestor';
     }
 
     if (!values.lastSignedIn) {
@@ -89,4 +110,170 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Gestores
+export async function getGestorByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(gestores).where(eq(gestores.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createGestor(data: InsertGestor) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(gestores).values(data);
+  return result;
+}
+
+// Mentores
+export async function getMentorByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(mentores).where(eq(mentores.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getMentoresByGestorId(gestorId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(mentores).where(eq(mentores.gestorId, gestorId));
+}
+
+export async function createMentor(data: InsertMentor) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(mentores).values(data);
+  return result;
+}
+
+export async function updateMentor(id: number, data: Partial<InsertMentor>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(mentores).set(data).where(eq(mentores.id, id));
+}
+
+// Alunos
+export async function getAlunoByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(alunos).where(eq(alunos.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAlunosByMentorId(mentorId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(alunos).where(eq(alunos.mentorId, mentorId));
+}
+
+export async function getAlunoById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(alunos).where(eq(alunos.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createAluno(data: InsertAluno) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(alunos).values(data);
+  return result;
+}
+
+export async function updateAluno(id: number, data: Partial<InsertAluno>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(alunos).set(data).where(eq(alunos.id, id));
+}
+
+export async function deleteAluno(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(alunos).where(eq(alunos.id, id));
+}
+
+export async function getTotalAlunosCount() {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select().from(alunos);
+  return result.length;
+}
+
+// Estudos
+export async function getEstudosByAlunoId(alunoId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(estudos).where(eq(estudos.alunoId, alunoId)).orderBy(desc(estudos.data));
+}
+
+export async function createEstudo(data: InsertEstudo) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(estudos).values(data);
+  return result;
+}
+
+export async function updateEstudo(id: number, data: Partial<InsertEstudo>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(estudos).set(data).where(eq(estudos.id, id));
+}
+
+export async function deleteEstudo(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(estudos).where(eq(estudos.id, id));
+}
+
+// Simulados
+export async function getSimuladosByAlunoId(alunoId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(simulados).where(eq(simulados.alunoId, alunoId)).orderBy(desc(simulados.data));
+}
+
+export async function createSimulado(data: InsertSimulado) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(simulados).values(data);
+  return result;
+}
+
+export async function updateSimulado(id: number, data: Partial<InsertSimulado>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(simulados).set(data).where(eq(simulados.id, id));
+}
+
+export async function deleteSimulado(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(simulados).where(eq(simulados.id, id));
+}
+
+// Anotações Mentor
+export async function getAnotacaoMentor(mentorId: number, alunoId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(anotacoesMentor)
+    .where(and(eq(anotacoesMentor.mentorId, mentorId), eq(anotacoesMentor.alunoId, alunoId)))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function upsertAnotacaoMentor(data: InsertAnotacaoMentor) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await getAnotacaoMentor(data.mentorId, data.alunoId);
+  
+  if (existing) {
+    await db.update(anotacoesMentor)
+      .set({ conteudo: data.conteudo, updatedAt: new Date() })
+      .where(eq(anotacoesMentor.id, existing.id));
+    return existing.id;
+  } else {
+    const result = await db.insert(anotacoesMentor).values(data);
+    return result;
+  }
+}

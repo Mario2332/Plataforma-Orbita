@@ -5,12 +5,67 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import AlunoHome from "./pages/aluno/AlunoHome";
+import AlunoEstudos from "./pages/aluno/AlunoEstudos";
+import AlunoSimulados from "./pages/aluno/AlunoSimulados";
+import AlunoMetricas from "./pages/aluno/AlunoMetricas";
+import MentorHome from "./pages/mentor/MentorHome";
+import MentorAlunos from "./pages/mentor/MentorAlunos";
+import GestorHome from "./pages/gestor/GestorHome";
+import GestorMentores from "./pages/gestor/GestorMentores";
+import DashboardLayout from "./components/DashboardLayout";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      
+      {/* Rotas do Aluno */}
+      <Route path="/aluno">
+        <DashboardLayout>
+          <AlunoHome />
+        </DashboardLayout>
+      </Route>
+      <Route path="/aluno/estudos">
+        <DashboardLayout>
+          <AlunoEstudos />
+        </DashboardLayout>
+      </Route>
+      <Route path="/aluno/simulados">
+        <DashboardLayout>
+          <AlunoSimulados />
+        </DashboardLayout>
+      </Route>
+      <Route path="/aluno/metricas">
+        <DashboardLayout>
+          <AlunoMetricas />
+        </DashboardLayout>
+      </Route>
+      
+      {/* Rotas do Mentor */}
+      <Route path="/mentor">
+        <DashboardLayout>
+          <MentorHome />
+        </DashboardLayout>
+      </Route>
+      <Route path="/mentor/alunos">
+        <DashboardLayout>
+          <MentorAlunos />
+        </DashboardLayout>
+      </Route>
+      
+      {/* Rotas do Gestor */}
+      <Route path="/gestor">
+        <DashboardLayout>
+          <GestorHome />
+        </DashboardLayout>
+      </Route>
+      <Route path="/gestor/mentores">
+        <DashboardLayout>
+          <GestorMentores />
+        </DashboardLayout>
+      </Route>
+      
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

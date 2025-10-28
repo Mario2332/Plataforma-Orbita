@@ -21,16 +21,39 @@ import {
 } from "@/components/ui/sidebar";
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { BarChart3, BookOpen, FileText, Home, LayoutDashboard, LogOut, PanelLeft, Settings, Users } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
-];
+const getMenuItems = (role?: string) => {
+  if (!role) return [];
+  
+  switch (role) {
+    case "aluno":
+      return [
+        { icon: Home, label: "Início", path: "/aluno" },
+        { icon: BookOpen, label: "Estudos", path: "/aluno/estudos" },
+        { icon: FileText, label: "Simulados", path: "/aluno/simulados" },
+        { icon: BarChart3, label: "Métricas", path: "/aluno/metricas" },
+      ];
+    case "mentor":
+      return [
+        { icon: Home, label: "Início", path: "/mentor" },
+        { icon: Users, label: "Alunos", path: "/mentor/alunos" },
+        { icon: Settings, label: "Configurações", path: "/mentor/configuracoes" },
+      ];
+    case "gestor":
+      return [
+        { icon: Home, label: "Início", path: "/gestor" },
+        { icon: Users, label: "Mentores", path: "/gestor/mentores" },
+        { icon: Settings, label: "Configurações", path: "/gestor/configuracoes" },
+      ];
+    default:
+      return [];
+  }
+};
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
 const DEFAULT_WIDTH = 280;
@@ -121,6 +144,7 @@ function DashboardLayoutContent({
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const menuItems = getMenuItems(user?.role);
   const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
 
