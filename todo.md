@@ -102,3 +102,9 @@
 - [x] Implementar design moderno e profissional nas páginas de login
 - [x] Separar rotas de login por perfil (/login/aluno, /login/mentor, /login/gestor)
 - [ ] Integrar autenticação Firebase com sistema de roles existente
+
+## Melhorias de Interface
+- [x] Personalizar navegação lateral para mostrar apenas abas do perfil do usuário
+- [x] Desenvolver dashboard principal do aluno com atalhos para funcionalidades
+- [x] Ativar todos os botões inativos da plataforma
+- [x] Implementar navegação contextual baseada em role
