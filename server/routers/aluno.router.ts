@@ -153,4 +153,65 @@ export const alunoRouter = router({
       }
       return db.deleteSimulado(input.id);
     }),
+
+  // Horários de Estudo
+  getHorarios: protectedProcedure.query(async ({ ctx }) => {
+    if (ctx.user.role !== "aluno") {
+      throw new Error("Acesso negado");
+    }
+    const aluno = await db.getAlunoByUserId(ctx.user.id);
+    if (!aluno) throw new Error("Aluno não encontrado");
+    return db.getHorariosByAlunoId(aluno.id);
+  }),
+
+  criarHorario: protectedProcedure
+    .input(
+      z.object({
+        diaSemana: z.number().min(0).max(6),
+        horaInicio: z.string(),
+        horaFim: z.string(),
+        materia: z.string(),
+        descricao: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "aluno") {
+        throw new Error("Acesso negado");
+      }
+      const aluno = await db.getAlunoByUserId(ctx.user.id);
+      if (!aluno) throw new Error("Aluno não encontrado");
+      
+      return db.createHorario({
+        alunoId: aluno.id,
+        ...input,
+      });
+    }),
+
+  atualizarHorario: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        diaSemana: z.number().min(0).max(6).optional(),
+        horaInicio: z.string().optional(),
+        horaFim: z.string().optional(),
+        materia: z.string().optional(),
+        descricao: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "aluno") {
+        throw new Error("Acesso negado");
+      }
+      const { id, ...data } = input;
+      return db.updateHorario(id, data);
+    }),
+
+  deletarHorario: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "aluno") {
+        throw new Error("Acesso negado");
+      }
+      return db.deleteHorario(input.id);
+    }),
 });

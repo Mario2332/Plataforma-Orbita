@@ -9,18 +9,21 @@ import {
   estudos, 
   simulados, 
   anotacoesMentor,
+  horariosEstudo,
   Gestor,
   Mentor,
   Aluno,
   Estudo,
   Simulado,
   AnotacaoMentor,
+  HorarioEstudo,
   InsertGestor,
   InsertMentor,
   InsertAluno,
   InsertEstudo,
   InsertSimulado,
-  InsertAnotacaoMentor
+  InsertAnotacaoMentor,
+  InsertHorarioEstudo
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -276,4 +279,30 @@ export async function upsertAnotacaoMentor(data: InsertAnotacaoMentor) {
     const result = await db.insert(anotacoesMentor).values(data);
     return result;
   }
+}
+
+// Horários de Estudo
+export async function getHorariosByAlunoId(alunoId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(horariosEstudo).where(eq(horariosEstudo.alunoId, alunoId)).orderBy(horariosEstudo.diaSemana, horariosEstudo.horaInicio);
+}
+
+export async function createHorario(data: InsertHorarioEstudo) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(horariosEstudo).values(data);
+  return result;
+}
+
+export async function updateHorario(id: number, data: Partial<InsertHorarioEstudo>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(horariosEstudo).set(data).where(eq(horariosEstudo.id, id));
+}
+
+export async function deleteHorario(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(horariosEstudo).where(eq(horariosEstudo.id, id));
 }

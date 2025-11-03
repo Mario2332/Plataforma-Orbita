@@ -15,6 +15,13 @@
       "when": 1761657696491,
       "tag": "0001_sturdy_forgotten_one",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1762190090856,
+      "tag": "0002_smart_thunderbolt",
+      "breakpoints": true
     }
   ]
 }

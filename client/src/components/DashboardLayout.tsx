@@ -37,6 +37,7 @@ const getMenuItems = (role?: string) => {
         { icon: BookOpen, label: "Estudos", path: "/aluno/estudos" },
         { icon: FileText, label: "Simulados", path: "/aluno/simulados" },
         { icon: BarChart3, label: "Métricas", path: "/aluno/metricas" },
+        { icon: LayoutDashboard, label: "Cronograma", path: "/aluno/cronograma" },
       ];
     case "mentor":
       return [

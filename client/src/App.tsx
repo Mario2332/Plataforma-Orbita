@@ -9,6 +9,7 @@ import AlunoHome from "./pages/aluno/AlunoHome";
 import AlunoEstudos from "./pages/aluno/AlunoEstudos";
 import AlunoSimulados from "./pages/aluno/AlunoSimulados";
 import AlunoMetricas from "./pages/aluno/AlunoMetricas";
+import AlunoCronograma from "./pages/aluno/AlunoCronograma";
 import MentorHome from "./pages/mentor/MentorHome";
 import MentorAlunos from "./pages/mentor/MentorAlunos";
 import GestorHome from "./pages/gestor/GestorHome";
@@ -47,6 +48,11 @@ function Router() {
       <Route path="/aluno/metricas">
         <DashboardLayout>
           <AlunoMetricas />
+        </DashboardLayout>
+      </Route>
+      <Route path="/aluno/cronograma">
+        <DashboardLayout>
+          <AlunoCronograma />
         </DashboardLayout>
       </Route>
       

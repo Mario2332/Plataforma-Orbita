@@ -144,3 +144,21 @@ export const anotacoesMentor = mysqlTable("anotacoesMentor", {
 
 export type AnotacaoMentor = typeof anotacoesMentor.$inferSelect;
 export type InsertAnotacaoMentor = typeof anotacoesMentor.$inferInsert;
+
+/**
+ * Horários de Estudo - Cronograma semanal do aluno
+ */
+export const horariosEstudo = mysqlTable("horariosEstudo", {
+  id: int("id").autoincrement().primaryKey(),
+  alunoId: int("alunoId").notNull().references(() => alunos.id, { onDelete: "cascade" }),
+  diaSemana: int("diaSemana").notNull(), // 0=Domingo, 1=Segunda, ..., 6=Sábado
+  horaInicio: varchar("horaInicio", { length: 5 }).notNull(), // Formato HH:MM
+  horaFim: varchar("horaFim", { length: 5 }).notNull(), // Formato HH:MM
+  materia: text("materia").notNull(),
+  descricao: text("descricao"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HorarioEstudo = typeof horariosEstudo.$inferSelect;
+export type InsertHorarioEstudo = typeof horariosEstudo.$inferInsert;

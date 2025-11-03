@@ -108,3 +108,16 @@
 - [x] Desenvolver dashboard principal do aluno com atalhos para funcionalidades
 - [x] Ativar todos os botões inativos da plataforma
 - [x] Implementar navegação contextual baseada em role
+
+## Novas Funcionalidades - Análise e Cronograma
+- [x] Implementar página de análise de desempenho com gráficos
+- [x] Adicionar filtros de período nos gráficos (7d, 30d, 3m, 6m, 1a)
+- [x] Criar gráfico de evolução temporal (linha)
+- [x] Criar gráfico de distribuição por matéria (barras)
+- [x] Criar gráfico de taxa de acerto por área (pizza)
+- [x] Implementar tabela de schema para horários de estudo
+- [x] Criar página de cronograma semanal
+- [x] Implementar funcionalidade de adicionar horários
+- [x] Implementar funcionalidade de editar horários
+- [x] Implementar funcionalidade de remover horários
+- [x] Criar visualização em grade semanal
