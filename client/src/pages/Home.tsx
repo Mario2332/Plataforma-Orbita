@@ -50,7 +50,7 @@ export default function Home() {
             </p>
             <div className="pt-4">
               <Button
-                onClick={() => window.location.href = getLoginUrl()}
+                onClick={() => setLocation("/login/aluno")}
                 size="lg"
                 className="w-full"
               >

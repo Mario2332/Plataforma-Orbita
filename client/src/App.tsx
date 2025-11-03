@@ -14,11 +14,19 @@ import MentorAlunos from "./pages/mentor/MentorAlunos";
 import GestorHome from "./pages/gestor/GestorHome";
 import GestorMentores from "./pages/gestor/GestorMentores";
 import DashboardLayout from "./components/DashboardLayout";
+import LoginAluno from "./pages/auth/LoginAluno";
+import LoginMentor from "./pages/auth/LoginMentor";
+import LoginGestor from "./pages/auth/LoginGestor";
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      
+      {/* Rotas de Login */}
+      <Route path="/login/aluno" component={LoginAluno} />
+      <Route path="/login/mentor" component={LoginMentor} />
+      <Route path="/login/gestor" component={LoginGestor} />
       
       {/* Rotas do Aluno */}
       <Route path="/aluno">

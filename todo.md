@@ -91,3 +91,14 @@
 
 ## Bugs
 - [x] Página inicial mostrando conteúdo de exemplo ao invés de redirecionar para dashboard baseado em role
+
+## Novas Funcionalidades - Firebase e Login
+- [x] Integrar Firebase no projeto
+- [x] Criar configuração do Firebase com credenciais fornecidas
+- [x] Implementar autenticação Firebase (email/senha)
+- [x] Criar página de login para Alunos (com opção de cadastro)
+- [x] Criar página de login para Mentores (sem cadastro)
+- [x] Criar página de login para Gestores (sem cadastro)
+- [x] Implementar design moderno e profissional nas páginas de login
+- [x] Separar rotas de login por perfil (/login/aluno, /login/mentor, /login/gestor)
+- [ ] Integrar autenticação Firebase com sistema de roles existente
