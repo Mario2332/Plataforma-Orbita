@@ -8,7 +8,20 @@ export const alunoRouter = router({
     if (ctx.user.role !== "aluno") {
       throw new Error("Acesso negado");
     }
-    const aluno = await db.getAlunoByUserId(ctx.user.id);
+    let aluno = await db.getAlunoByUserId(ctx.user.id);
+    
+    // Se o aluno não existe, criar automaticamente
+    if (!aluno) {
+      await db.createAluno({
+        userId: ctx.user.id,
+        nome: ctx.user.name || "Aluno",
+        email: ctx.user.email || "",
+        celular: "",
+        mentorId: 1, // Mentor padrão - pode ser ajustado depois
+      });
+      aluno = await db.getAlunoByUserId(ctx.user.id);
+    }
+    
     return aluno;
   }),
 

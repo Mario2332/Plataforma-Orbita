@@ -182,3 +182,8 @@
 - [x] Adicionar validações de campos
 - [x] Integrar com Firebase Auth para atualização de email e senha
 - [x] Adicionar procedures tRPC para atualização de dados do aluno
+
+## Bug Crítico - Aluno não encontrado
+- [x] Erro "Aluno não encontrado" quando usuário Firebase não tem registro na tabela alunos
+- [x] Criar registro de aluno automaticamente no primeiro acesso (similar ao gestor)
+- [x] Atualizar procedure aluno.me para criar registro se não existir
