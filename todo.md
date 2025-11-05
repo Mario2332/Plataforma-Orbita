@@ -174,3 +174,11 @@
 - [x] Remover "Mentores" e "Alunos" da navegação lateral do aluno
 - [x] Adicionar "Configurações" à navegação do aluno
 - [x] Reordenar itens: Início, Estudos, Cronograma, Métricas, Simulados, Configurações
+
+## Nova Funcionalidade - Configurações do Aluno
+- [x] Criar página de configurações do aluno
+- [x] Implementar formulário de edição de perfil (nome, email, celular)
+- [x] Implementar formulário de alteração de senha
+- [x] Adicionar validações de campos
+- [x] Integrar com Firebase Auth para atualização de email e senha
+- [x] Adicionar procedures tRPC para atualização de dados do aluno

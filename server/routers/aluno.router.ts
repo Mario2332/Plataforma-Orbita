@@ -214,4 +214,23 @@ export const alunoRouter = router({
       }
       return db.deleteHorario(input.id);
     }),
+
+  // Atualizar perfil do aluno
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        nome: z.string(),
+        email: z.string().email(),
+        celular: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "aluno") {
+        throw new Error("Acesso negado");
+      }
+      const aluno = await db.getAlunoByUserId(ctx.user.id);
+      if (!aluno) throw new Error("Aluno não encontrado");
+      
+      return db.updateAluno(aluno.id, input);
+    }),
 });
