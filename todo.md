@@ -197,3 +197,12 @@
 - [x] Implementar funcionalidade de copiar/colar células
 - [ ] Atualizar schema do banco para armazenar atividades por slot de tempo
 - [ ] Criar procedures tRPC para salvar/carregar cronograma
+
+## Melhorias - Cronograma Semanal
+- [x] Mover box de instruções para cima da grade semanal
+- [x] Implementar drag and drop para mover atividades entre células
+- [x] Criar sistema de templates de cronograma
+- [x] Permitir salvar cronograma atual como template
+- [x] Permitir carregar template salvo
+- [x] Permitir deletar templates
+- [ ] Armazenar templates no banco de dados
