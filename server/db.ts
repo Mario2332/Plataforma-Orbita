@@ -208,6 +208,12 @@ export async function getTotalAlunosCount() {
   return result.length;
 }
 
+export async function getAllAlunos() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(alunos).orderBy(desc(alunos.createdAt));
+}
+
 // Estudos
 export async function getEstudosByAlunoId(alunoId: number) {
   const db = await getDb();

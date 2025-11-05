@@ -112,4 +112,42 @@ export const gestorRouter = router({
       // TODO: Verificar se o mentor pertence ao gestor logado
       return db.deleteMentor(input.id);
     }),
+
+  // Gestão de Alunos
+  getAllAlunos: protectedProcedure.query(async ({ ctx }) => {
+    if (ctx.user.role !== "gestor") {
+      throw new Error("Acesso negado");
+    }
+    return db.getAllAlunos();
+  }),
+
+  updateAluno: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        nome: z.string().optional(),
+        email: z.string().email().optional(),
+        mentorId: z.number().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "gestor") {
+        throw new Error("Acesso negado");
+      }
+      const { id, ...data } = input;
+      return db.updateAluno(id, data);
+    }),
+
+  deleteAluno: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "gestor") {
+        throw new Error("Acesso negado");
+      }
+      return db.deleteAluno(input.id);
+    }),
 });

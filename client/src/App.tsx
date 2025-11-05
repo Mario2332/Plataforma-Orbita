@@ -14,6 +14,7 @@ import MentorHome from "./pages/mentor/MentorHome";
 import MentorAlunos from "./pages/mentor/MentorAlunos";
 import GestorHome from "./pages/gestor/GestorHome";
 import GestorMentores from "./pages/gestor/GestorMentores";
+import GestorAlunos from "./pages/gestor/GestorAlunos";
 import DashboardLayout from "./components/DashboardLayout";
 import LoginAluno from "./pages/auth/LoginAluno";
 import LoginMentor from "./pages/auth/LoginMentor";
@@ -77,6 +78,11 @@ function Router() {
       <Route path="/gestor/mentores">
         <DashboardLayout>
           <GestorMentores />
+        </DashboardLayout>
+      </Route>
+      <Route path="/gestor/alunos">
+        <DashboardLayout>
+          <GestorAlunos />
         </DashboardLayout>
       </Route>
       

@@ -149,3 +149,14 @@
 - [x] Implementar exclusão de mentores
 - [ ] Criar usuário Firebase Auth automaticamente ao adicionar mentor
 - [x] Configurar white-label (nome, logo, cor) por mentor
+
+## Nova Funcionalidade - Gestão de Alunos e Dashboard Gestor
+- [x] Criar página de listagem de todos os alunos para o gestor
+- [x] Mostrar informações de cada aluno (nome, email, mentor vinculado)
+- [x] Implementar edição de informações do aluno
+- [x] Implementar troca de mentor do aluno
+- [x] Implementar exclusão de aluno
+- [x] Criar dashboard analítico com gráficos temporais
+- [x] Gráfico de crescimento de alunos ao longo do tempo
+- [x] Gráfico de crescimento de mentores ao longo do tempo
+- [x] Métricas gerais no dashboard (total alunos, mentores, crescimento)
