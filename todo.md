@@ -187,3 +187,13 @@
 - [x] Erro "Aluno não encontrado" quando usuário Firebase não tem registro na tabela alunos
 - [x] Criar registro de aluno automaticamente no primeiro acesso (similar ao gestor)
 - [x] Atualizar procedure aluno.me para criar registro se não existir
+
+## Refatoração - Cronograma Semanal Estilo Calendário
+- [x] Redesenhar cronograma em formato de grade única (todos os dias visíveis)
+- [x] Criar coluna de horários (00:00 a 23:30, intervalos de 30min)
+- [x] Criar colunas para cada dia da semana (Domingo a Sábado)
+- [x] Implementar células editáveis para inserir atividades
+- [x] Adicionar seletor de cor para cada célula
+- [x] Implementar funcionalidade de copiar/colar células
+- [ ] Atualizar schema do banco para armazenar atividades por slot de tempo
+- [ ] Criar procedures tRPC para salvar/carregar cronograma

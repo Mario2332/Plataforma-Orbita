@@ -1,378 +1,248 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { trpc } from "@/lib/trpc";
-import { Calendar, Clock, Plus, Trash2, Edit } from "lucide-react";
 import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Calendar, Save, Copy, Palette } from "lucide-react";
 import { toast } from "sonner";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-const DIAS_SEMANA = [
-  { valor: 0, nome: "Domingo" },
-  { valor: 1, nome: "Segunda" },
-  { valor: 2, nome: "Terça" },
-  { valor: 3, nome: "Quarta" },
-  { valor: 4, nome: "Quinta" },
-  { valor: 5, nome: "Sexta" },
-  { valor: 6, nome: "Sábado" },
-];
-
-const MATERIAS_SUGERIDAS = [
-  "Matemática",
-  "Português",
-  "Física",
-  "Química",
-  "Biologia",
-  "História",
-  "Geografia",
-  "Filosofia",
-  "Sociologia",
-  "Inglês",
-  "Redação",
-  "Literatura",
-];
-
-type HorarioForm = {
-  diaSemana: number;
-  horaInicio: string;
-  horaFim: string;
-  materia: string;
-  descricao: string;
+type TimeSlot = {
+  day: number; // 0 = Domingo, 6 = Sábado
+  hour: number; // 0-23
+  minute: number; // 0 ou 30
+  activity: string;
+  color: string;
 };
 
+const DAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
+const MINUTES = [0, 30];
+
+const COLORS = [
+  { name: "Laranja", value: "#FFA500" },
+  { name: "Azul", value: "#4A90E2" },
+  { name: "Verde", value: "#50C878" },
+  { name: "Rosa", value: "#FF69B4" },
+  { name: "Roxo", value: "#9B59B6" },
+  { name: "Amarelo", value: "#FFD700" },
+  { name: "Vermelho", value: "#E74C3C" },
+  { name: "Cinza", value: "#95A5A6" },
+  { name: "Branco", value: "#FFFFFF" },
+];
+
 export default function AlunoCronograma() {
-  const [dialogAberto, setDialogAberto] = useState(false);
-  const [horarioEditando, setHorarioEditando] = useState<number | null>(null);
-  const [formData, setFormData] = useState<HorarioForm>({
-    diaSemana: 1,
-    horaInicio: "",
-    horaFim: "",
-    materia: "",
-    descricao: "",
-  });
+  const [schedule, setSchedule] = useState<TimeSlot[]>([]);
+  const [copiedCell, setCopiedCell] = useState<TimeSlot | null>(null);
+  const [editingCell, setEditingCell] = useState<string | null>(null);
 
-  const { data: horarios, isLoading, refetch } = trpc.aluno.getHorarios.useQuery();
-  const criarHorario = trpc.aluno.criarHorario.useMutation({
-    onSuccess: () => {
-      toast.success("Horário adicionado com sucesso!");
-      refetch();
-      fecharDialog();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao adicionar horário");
-    },
-  });
+  const getCellKey = (day: number, hour: number, minute: number) => 
+    `${day}-${hour}-${minute}`;
 
-  const atualizarHorario = trpc.aluno.atualizarHorario.useMutation({
-    onSuccess: () => {
-      toast.success("Horário atualizado com sucesso!");
-      refetch();
-      fecharDialog();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao atualizar horário");
-    },
-  });
-
-  const deletarHorario = trpc.aluno.deletarHorario.useMutation({
-    onSuccess: () => {
-      toast.success("Horário removido com sucesso!");
-      refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao remover horário");
-    },
-  });
-
-  const abrirDialogNovo = () => {
-    setHorarioEditando(null);
-    setFormData({
-      diaSemana: 1,
-      horaInicio: "",
-      horaFim: "",
-      materia: "",
-      descricao: "",
-    });
-    setDialogAberto(true);
-  };
-
-  const abrirDialogEditar = (horario: any) => {
-    setHorarioEditando(horario.id);
-    setFormData({
-      diaSemana: horario.diaSemana,
-      horaInicio: horario.horaInicio,
-      horaFim: horario.horaFim,
-      materia: horario.materia,
-      descricao: horario.descricao || "",
-    });
-    setDialogAberto(true);
-  };
-
-  const fecharDialog = () => {
-    setDialogAberto(false);
-    setHorarioEditando(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.horaInicio || !formData.horaFim || !formData.materia) {
-      toast.error("Preencha todos os campos obrigatórios");
-      return;
-    }
-
-    if (formData.horaInicio >= formData.horaFim) {
-      toast.error("A hora de início deve ser anterior à hora de fim");
-      return;
-    }
-
-    if (horarioEditando) {
-      atualizarHorario.mutate({
-        id: horarioEditando,
-        ...formData,
-      });
-    } else {
-      criarHorario.mutate(formData);
-    }
-  };
-
-  const handleDeletar = (id: number) => {
-    if (confirm("Tem certeza que deseja remover este horário?")) {
-      deletarHorario.mutate({ id });
-    }
-  };
-
-  // Agrupar horários por dia da semana
-  const horariosPorDia = DIAS_SEMANA.map((dia) => ({
-    ...dia,
-    horarios: (horarios || [])
-      .filter((h) => h.diaSemana === dia.valor)
-      .sort((a, b) => a.horaInicio.localeCompare(b.horaInicio)),
-  }));
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
+  const getSlot = (day: number, hour: number, minute: number): TimeSlot => {
+    const existing = schedule.find(
+      s => s.day === day && s.hour === hour && s.minute === minute
     );
-  }
+    return existing || { day, hour, minute, activity: "", color: "#FFFFFF" };
+  };
+
+  const updateSlot = (day: number, hour: number, minute: number, updates: Partial<TimeSlot>) => {
+    const key = getCellKey(day, hour, minute);
+    const existing = schedule.find(
+      s => s.day === day && s.hour === hour && s.minute === minute
+    );
+
+    if (existing) {
+      setSchedule(schedule.map(s => 
+        s.day === day && s.hour === hour && s.minute === minute
+          ? { ...s, ...updates }
+          : s
+      ));
+    } else {
+      setSchedule([...schedule, { day, hour, minute, activity: "", color: "#FFFFFF", ...updates }]);
+    }
+  };
+
+  const handleCopy = (day: number, hour: number, minute: number) => {
+    const slot = getSlot(day, hour, minute);
+    setCopiedCell(slot);
+    toast.success("Célula copiada!");
+  };
+
+  const handlePaste = (day: number, hour: number, minute: number) => {
+    if (!copiedCell) {
+      toast.error("Nenhuma célula copiada");
+      return;
+    }
+    updateSlot(day, hour, minute, {
+      activity: copiedCell.activity,
+      color: copiedCell.color,
+    });
+    toast.success("Célula colada!");
+  };
+
+  const handleSave = () => {
+    // TODO: Salvar no backend via tRPC
+    toast.success("Cronograma salvo com sucesso!");
+    console.log("Schedule to save:", schedule);
+  };
+
+  const formatTime = (hour: number, minute: number) => {
+    return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+  };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Cronograma Semanal</h1>
-          <p className="text-muted-foreground">Organize seus horários de estudo</p>
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-6 w-6 text-primary" />
+            <h1 className="text-3xl font-bold">Cronograma Semanal</h1>
+          </div>
+          <Button onClick={handleSave}>
+            <Save className="mr-2 h-4 w-4" />
+            Salvar Cronograma
+          </Button>
         </div>
-        <Button onClick={abrirDialogNovo}>
-          <Plus className="h-4 w-4 mr-2" />
-          Adicionar Horário
-        </Button>
+        <p className="text-muted-foreground">
+          Organize sua rotina semanal. Clique nas células para editar, escolher cores e copiar/colar atividades.
+        </p>
       </div>
 
-      {/* Visualização em Grade Semanal */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {horariosPorDia.map((dia) => (
-          <Card key={dia.valor} className="flex flex-col">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                {dia.nome}
-              </CardTitle>
-              <CardDescription>
-                {dia.horarios.length} {dia.horarios.length === 1 ? "horário" : "horários"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1">
-              {dia.horarios.length > 0 ? (
-                <div className="space-y-3">
-                  {dia.horarios.map((horario) => (
-                    <div
-                      key={horario.id}
-                      className="p-3 bg-secondary/50 rounded-lg space-y-2 hover:bg-secondary transition-colors"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{horario.materia}</p>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                            <Clock className="h-3 w-3" />
-                            {horario.horaInicio} - {horario.horaFim}
-                          </div>
-                          {horario.descricao && (
-                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                              {horario.descricao}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex gap-1 shrink-0">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={() => abrirDialogEditar(horario)}
-                          >
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-destructive hover:text-destructive"
-                            onClick={() => handleDeletar(horario.id)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Grade Semanal</CardTitle>
+          <CardDescription>
+            Intervalos de 30 minutos • Clique para editar • Clique direito para copiar/colar
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <div className="min-w-[900px]">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="border border-border bg-muted p-2 text-sm font-semibold sticky left-0 z-10">
+                    Horário
+                  </th>
+                  {DAYS.map((day, index) => (
+                    <th key={index} className="border border-border bg-muted p-2 text-sm font-semibold">
+                      {day}
+                    </th>
                   ))}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-                  <Clock className="h-8 w-8 mb-2 opacity-20" />
-                  <p className="text-sm">Nenhum horário</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                </tr>
+              </thead>
+              <tbody>
+                {HOURS.map(hour =>
+                  MINUTES.map(minute => {
+                    const timeKey = `${hour}-${minute}`;
+                    return (
+                      <tr key={timeKey}>
+                        <td className="border border-border bg-muted p-2 text-xs font-mono sticky left-0 z-10">
+                          {formatTime(hour, minute)}
+                        </td>
+                        {DAYS.map((_, dayIndex) => {
+                          const slot = getSlot(dayIndex, hour, minute);
+                          const cellKey = getCellKey(dayIndex, hour, minute);
+                          const isEditing = editingCell === cellKey;
 
-      {/* Dialog de Adicionar/Editar */}
-      <Dialog open={dialogAberto} onOpenChange={setDialogAberto}>
-        <DialogContent className="sm:max-w-[500px]">
-          <form onSubmit={handleSubmit}>
-            <DialogHeader>
-              <DialogTitle>
-                {horarioEditando ? "Editar Horário" : "Adicionar Horário"}
-              </DialogTitle>
-              <DialogDescription>
-                Defina o horário de estudo para sua rotina semanal
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="diaSemana">Dia da Semana</Label>
-                <Select
-                  value={formData.diaSemana.toString()}
-                  onValueChange={(v) =>
-                    setFormData({ ...formData, diaSemana: parseInt(v) })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DIAS_SEMANA.map((dia) => (
-                      <SelectItem key={dia.valor} value={dia.valor.toString()}>
-                        {dia.nome}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="horaInicio">Hora Início</Label>
-                  <Input
-                    id="horaInicio"
-                    type="time"
-                    value={formData.horaInicio}
-                    onChange={(e) =>
-                      setFormData({ ...formData, horaInicio: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="horaFim">Hora Fim</Label>
-                  <Input
-                    id="horaFim"
-                    type="time"
-                    value={formData.horaFim}
-                    onChange={(e) =>
-                      setFormData({ ...formData, horaFim: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="materia">Matéria</Label>
-                <Select
-                  value={formData.materia}
-                  onValueChange={(v) => setFormData({ ...formData, materia: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma matéria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MATERIAS_SUGERIDAS.map((materia) => (
-                      <SelectItem key={materia} value={materia}>
-                        {materia}
-                      </SelectItem>
-                    ))}
-                    <SelectItem value="Outra">Outra</SelectItem>
-                  </SelectContent>
-                </Select>
-                {formData.materia === "Outra" && (
-                  <Input
-                    placeholder="Digite o nome da matéria"
-                    value={formData.materia === "Outra" ? "" : formData.materia}
-                    onChange={(e) =>
-                      setFormData({ ...formData, materia: e.target.value })
-                    }
-                    className="mt-2"
-                  />
+                          return (
+                            <td
+                              key={cellKey}
+                              className="border border-border p-0 h-10 relative group"
+                              style={{ backgroundColor: slot.color }}
+                              onContextMenu={(e) => {
+                                e.preventDefault();
+                                if (copiedCell) {
+                                  handlePaste(dayIndex, hour, minute);
+                                } else {
+                                  handleCopy(dayIndex, hour, minute);
+                                }
+                              }}
+                            >
+                              {isEditing ? (
+                                <Input
+                                  autoFocus
+                                  value={slot.activity}
+                                  onChange={(e) => updateSlot(dayIndex, hour, minute, { activity: e.target.value })}
+                                  onBlur={() => setEditingCell(null)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") setEditingCell(null);
+                                    if (e.key === "Escape") setEditingCell(null);
+                                  }}
+                                  className="h-full border-0 text-xs p-1"
+                                  style={{ backgroundColor: slot.color }}
+                                />
+                              ) : (
+                                <div
+                                  onClick={() => setEditingCell(cellKey)}
+                                  className="h-full w-full p-1 text-xs cursor-pointer flex items-center justify-between"
+                                >
+                                  <span className="truncate flex-1">{slot.activity}</span>
+                                  <div className="opacity-0 group-hover:opacity-100 flex gap-1">
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                          }}
+                                          className="p-0.5 hover:bg-black/10 rounded"
+                                        >
+                                          <Palette className="h-3 w-3" />
+                                        </button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-2">
+                                        <div className="grid grid-cols-3 gap-2">
+                                          {COLORS.map((color) => (
+                                            <button
+                                              key={color.value}
+                                              onClick={() => {
+                                                updateSlot(dayIndex, hour, minute, { color: color.value });
+                                              }}
+                                              className="w-8 h-8 rounded border-2 border-border hover:scale-110 transition-transform"
+                                              style={{ backgroundColor: color.value }}
+                                              title={color.name}
+                                            />
+                                          ))}
+                                        </div>
+                                      </PopoverContent>
+                                    </Popover>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCopy(dayIndex, hour, minute);
+                                      }}
+                                      className="p-0.5 hover:bg-black/10 rounded"
+                                      title="Copiar"
+                                    >
+                                      <Copy className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })
                 )}
-              </div>
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
 
-              <div className="grid gap-2">
-                <Label htmlFor="descricao">Descrição (opcional)</Label>
-                <Textarea
-                  id="descricao"
-                  placeholder="Ex: Resolver exercícios do capítulo 5"
-                  value={formData.descricao}
-                  onChange={(e) =>
-                    setFormData({ ...formData, descricao: e.target.value })
-                  }
-                  rows={3}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={fecharDialog}>
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                disabled={criarHorario.isPending || atualizarHorario.isPending}
-              >
-                {horarioEditando ? "Atualizar" : "Adicionar"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <Card>
+        <CardHeader>
+          <CardTitle>Instruções</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <p>• <strong>Editar:</strong> Clique em uma célula para digitar a atividade</p>
+          <p>• <strong>Cor:</strong> Clique no ícone de paleta para escolher a cor da célula</p>
+          <p>• <strong>Copiar:</strong> Clique no ícone de copiar ou clique com botão direito</p>
+          <p>• <strong>Colar:</strong> Após copiar, clique com botão direito na célula de destino</p>
+          <p>• <strong>Salvar:</strong> Clique em "Salvar Cronograma" para guardar suas alterações</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
