@@ -121,3 +121,22 @@
 - [x] Implementar funcionalidade de editar horários
 - [x] Implementar funcionalidade de remover horários
 - [x] Criar visualização em grade semanal
+
+## Bugs Reportados
+- [ ] Barra lateral mostrando abas incorretas - todos os perfis veem as mesmas abas ao invés de abas específicas do seu perfil
+
+## Migração para Firebase
+- [ ] Instalar Firebase Admin SDK no servidor
+- [ ] Instalar Firebase Client SDK no cliente
+- [ ] Configurar Firebase Admin no backend
+- [ ] Substituir queries MySQL por Firestore
+- [ ] Migrar autenticação para Firebase Auth
+- [ ] Atualizar todos os routers tRPC para usar Firestore
+- [ ] Atualizar frontend para usar Firebase Auth
+- [ ] Remover dependências do Drizzle ORM
+- [ ] Testar todas as funcionalidades com Firebase
+
+## Bugs Críticos - Sistema Híbrido
+- [x] Erro "Gestor não encontrado" - routers tentando buscar no Firestore mas usuário está no MySQL
+- [x] Query data undefined para gestor.me
+- [ ] Sistema híbrido MySQL/Firestore causando conflitos - precisa suportar ambos

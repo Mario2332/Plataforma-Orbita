@@ -39,10 +39,14 @@ export default function LoginAluno() {
         loginData.email,
         loginData.senha
       );
-      
+
+      // Aguardar token ser salvo no localStorage
+      const token = await userCredential.user.getIdToken();
+      localStorage.setItem('firebase-token', token);
+
       toast.success("Login realizado com sucesso!");
-      // Redirecionar para dashboard do aluno
-      setLocation("/aluno");
+      // Recarregar para atualizar contexto
+      window.location.href = "/aluno";
     } catch (error: any) {
       console.error("Erro no login:", error);
       toast.error(error.message || "Erro ao fazer login. Verifique suas credenciais.");
@@ -73,11 +77,16 @@ export default function LoginAluno() {
         cadastroData.senha
       );
 
+      // Aguardar token ser salvo no localStorage
+      const token = await userCredential.user.getIdToken();
+      localStorage.setItem('firebase-token', token);
+
       // TODO: Salvar dados adicionais no banco (nome, celular)
       // Isso deve ser feito via tRPC mutation
 
       toast.success("Cadastro realizado com sucesso!");
-      setLocation("/aluno");
+      // Recarregar para atualizar contexto
+      window.location.href = "/aluno";
     } catch (error: any) {
       console.error("Erro no cadastro:", error);
       if (error.code === "auth/email-already-in-use") {

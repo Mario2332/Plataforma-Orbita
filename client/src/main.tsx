@@ -43,9 +43,20 @@ const trpcClient = trpc.createClient({
       url: "/api/trpc",
       transformer: superjson,
       fetch(input, init) {
+        // Adicionar token Firebase se existir
+        const firebaseToken = localStorage.getItem('firebase-token');
+        const headers: Record<string, string> = {
+          ...(init?.headers as Record<string, string> || {}),
+        };
+        
+        if (firebaseToken) {
+          headers['Authorization'] = `Bearer ${firebaseToken}`;
+        }
+        
         return globalThis.fetch(input, {
           ...(init ?? {}),
           credentials: "include",
+          headers,
         });
       },
     }),

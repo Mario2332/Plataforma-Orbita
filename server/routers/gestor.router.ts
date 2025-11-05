@@ -8,7 +8,18 @@ export const gestorRouter = router({
     if (ctx.user.role !== "gestor") {
       throw new Error("Acesso negado");
     }
-    const gestor = await db.getGestorByUserId(ctx.user.id);
+    let gestor = await db.getGestorByUserId(ctx.user.id);
+    
+    // Se o gestor não existe, criar automaticamente
+    if (!gestor) {
+      await db.createGestor({
+        userId: ctx.user.id,
+        nome: ctx.user.name || "Gestor",
+        email: ctx.user.email || "",
+      });
+      gestor = await db.getGestorByUserId(ctx.user.id);
+    }
+    
     return gestor;
   }),
 
@@ -25,8 +36,18 @@ export const gestorRouter = router({
     if (ctx.user.role !== "gestor") {
       throw new Error("Acesso negado");
     }
-    const gestor = await db.getGestorByUserId(ctx.user.id);
-    if (!gestor) throw new Error("Gestor não encontrado");
+    let gestor = await db.getGestorByUserId(ctx.user.id);
+    
+    // Se o gestor não existe, criar automaticamente
+    if (!gestor) {
+      await db.createGestor({
+        userId: ctx.user.id,
+        nome: ctx.user.name || "Gestor",
+        email: ctx.user.email || "",
+      });
+      gestor = await db.getGestorByUserId(ctx.user.id);
+      if (!gestor) throw new Error("Gestor não encontrado");
+    }
     return db.getMentoresByGestorId(gestor.id);
   }),
 

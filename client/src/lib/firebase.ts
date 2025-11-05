@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -24,3 +24,38 @@ if (typeof window !== 'undefined') {
 
 export { analytics };
 export default app;
+
+// Função para obter o token atual do usuário
+export async function getFirebaseToken(): Promise<string | null> {
+  const user = auth.currentUser;
+  if (!user) return null;
+  try {
+    return await user.getIdToken();
+  } catch (error) {
+    console.error('Erro ao obter token Firebase:', error);
+    return null;
+  }
+}
+
+// Listener para mudanças no estado de autenticação
+if (typeof window !== 'undefined') {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // Usuário logado - armazenar token
+      const token = await user.getIdToken();
+      localStorage.setItem('firebase-token', token);
+      
+      // Armazenar informações do usuário
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+      };
+      localStorage.setItem('firebase-user', JSON.stringify(userData));
+    } else {
+      // Usuário deslogado - limpar dados
+      localStorage.removeItem('firebase-token');
+      localStorage.removeItem('firebase-user');
+    }
+  });
+}
