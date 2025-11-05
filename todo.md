@@ -160,3 +160,8 @@
 - [x] Gráfico de crescimento de alunos ao longo do tempo
 - [x] Gráfico de crescimento de mentores ao longo do tempo
 - [x] Métricas gerais no dashboard (total alunos, mentores, crescimento)
+
+## Melhoria - Filtro de Alunos por Mentor
+- [x] Adicionar dropdown de seleção de mentor na página de alunos
+- [x] Implementar filtro combinado (busca + mentor)
+- [x] Adicionar opção "Todos os mentores" no filtro

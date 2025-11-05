@@ -14,6 +14,7 @@ export default function GestorAlunos() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingAluno, setEditingAluno] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedMentorId, setSelectedMentorId] = useState<string>("all");
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
@@ -89,10 +90,12 @@ export default function GestorAlunos() {
     return mentor?.nome || "Sem mentor";
   };
 
-  const filteredAlunos = alunos?.filter((aluno: any) =>
-    aluno.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    aluno.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAlunos = alunos?.filter((aluno: any) => {
+    const matchesSearch = aluno.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      aluno.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesMentor = selectedMentorId === "all" || aluno.mentorId === parseInt(selectedMentorId);
+    return matchesSearch && matchesMentor;
+  });
 
   if (loadingAlunos || loadingMentores) {
     return (
@@ -115,14 +118,29 @@ export default function GestorAlunos() {
 
       <Card>
         <CardContent className="pt-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por nome ou email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm"
-            />
+          <div className="flex items-center gap-4 mb-4 flex-wrap">
+            <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por nome ou email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="max-w-sm"
+              />
+            </div>
+            <Select value={selectedMentorId} onValueChange={setSelectedMentorId}>
+              <SelectTrigger className="w-[250px]">
+                <SelectValue placeholder="Filtrar por mentor" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os mentores</SelectItem>
+                {mentores?.map((mentor: any) => (
+                  <SelectItem key={mentor.id} value={mentor.id.toString()}>
+                    {mentor.nome} - {mentor.nomePlataforma}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {!filteredAlunos || filteredAlunos.length === 0 ? (
