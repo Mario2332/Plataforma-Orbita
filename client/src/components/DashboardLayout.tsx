@@ -35,9 +35,10 @@ const getMenuItems = (role?: string) => {
       return [
         { icon: Home, label: "Início", path: "/aluno" },
         { icon: BookOpen, label: "Estudos", path: "/aluno/estudos" },
-        { icon: FileText, label: "Simulados", path: "/aluno/simulados" },
-        { icon: BarChart3, label: "Métricas", path: "/aluno/metricas" },
         { icon: LayoutDashboard, label: "Cronograma", path: "/aluno/cronograma" },
+        { icon: BarChart3, label: "Métricas", path: "/aluno/metricas" },
+        { icon: FileText, label: "Simulados", path: "/aluno/simulados" },
+        { icon: Settings, label: "Configurações", path: "/aluno/configuracoes" },
       ];
     case "mentor":
       return [

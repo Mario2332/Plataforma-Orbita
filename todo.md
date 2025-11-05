@@ -169,3 +169,8 @@
 ## Ajustes de UI - Páginas de Login
 - [x] Remover seção "Acesso restrito para alunos" e links para outros perfis da página de login do aluno
 - [x] Remover seção "Outros acessos" e "Nota para Mentores" da página de login do mentor
+
+## Correção - Navegação do Aluno
+- [x] Remover "Mentores" e "Alunos" da navegação lateral do aluno
+- [x] Adicionar "Configurações" à navegação do aluno
+- [x] Reordenar itens: Início, Estudos, Cronograma, Métricas, Simulados, Configurações
