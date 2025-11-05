@@ -261,16 +261,6 @@ export default function LoginAluno() {
                 </form>
               </TabsContent>
             </Tabs>
-
-            <div className="mt-6 text-center text-sm text-muted-foreground">
-              <p>Acesso restrito para alunos</p>
-              <p className="mt-2">
-                Mentor ou Gestor?{" "}
-                <a href="/login/mentor" className="text-primary hover:underline">
-                  Clique aqui
-                </a>
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>

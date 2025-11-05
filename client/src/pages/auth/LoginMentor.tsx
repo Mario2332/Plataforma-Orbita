@@ -128,38 +128,6 @@ export default function LoginMentor() {
               </Button>
             </form>
 
-            <div className="mt-6 space-y-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-muted-foreground">Outros acessos</span>
-                </div>
-              </div>
-
-              <div className="text-center text-sm space-y-2">
-                <p className="text-muted-foreground">
-                  Aluno?{" "}
-                  <a href="/login/aluno" className="text-primary hover:underline">
-                    Acesse aqui
-                  </a>
-                </p>
-                <p className="text-muted-foreground">
-                  Gestor?{" "}
-                  <a href="/login/gestor" className="text-primary hover:underline">
-                    Acesse aqui
-                  </a>
-                </p>
-              </div>
-
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-                <p className="font-medium mb-1">📝 Nota para Mentores</p>
-                <p>
-                  Suas credenciais são fornecidas pelo gestor da plataforma. Entre em contato se precisar de ajuda.
-                </p>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>

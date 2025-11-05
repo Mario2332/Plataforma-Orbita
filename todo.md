@@ -165,3 +165,7 @@
 - [x] Adicionar dropdown de seleção de mentor na página de alunos
 - [x] Implementar filtro combinado (busca + mentor)
 - [x] Adicionar opção "Todos os mentores" no filtro
+
+## Ajustes de UI - Páginas de Login
+- [x] Remover seção "Acesso restrito para alunos" e links para outros perfis da página de login do aluno
+- [x] Remover seção "Outros acessos" e "Nota para Mentores" da página de login do mentor
