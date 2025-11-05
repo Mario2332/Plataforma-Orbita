@@ -155,6 +155,12 @@ export async function updateMentor(id: number, data: Partial<InsertMentor>) {
   await db.update(mentores).set(data).where(eq(mentores.id, id));
 }
 
+export async function deleteMentor(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(mentores).where(eq(mentores.id, id));
+}
+
 // Alunos
 export async function getAlunoByUserId(userId: number) {
   const db = await getDb();

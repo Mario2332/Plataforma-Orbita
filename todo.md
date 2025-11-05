@@ -140,3 +140,12 @@
 - [x] Erro "Gestor não encontrado" - routers tentando buscar no Firestore mas usuário está no MySQL
 - [x] Query data undefined para gestor.me
 - [ ] Sistema híbrido MySQL/Firestore causando conflitos - precisa suportar ambos
+
+## Nova Funcionalidade - Gestão de Mentores
+- [x] Criar página de listagem de mentores para o gestor
+- [x] Implementar formulário de adição de novos mentores
+- [x] Adicionar validações de email e campos obrigatórios
+- [x] Implementar edição de mentores existentes
+- [x] Implementar exclusão de mentores
+- [ ] Criar usuário Firebase Auth automaticamente ao adicionar mentor
+- [x] Configurar white-label (nome, logo, cor) por mentor

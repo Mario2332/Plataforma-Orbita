@@ -98,4 +98,18 @@ export const gestorRouter = router({
       const { id, ...data } = input;
       return db.updateMentor(id, data);
     }),
+
+  deleteMentor: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "gestor") {
+        throw new Error("Acesso negado");
+      }
+      // TODO: Verificar se o mentor pertence ao gestor logado
+      return db.deleteMentor(input.id);
+    }),
 });
