@@ -206,3 +206,8 @@
 - [x] Permitir carregar template salvo
 - [x] Permitir deletar templates
 - [ ] Armazenar templates no banco de dados
+
+## Deploy e Versionamento
+- [ ] Fazer push do código para o repositório GitHub "Plataforma-Orbita"
+- [ ] Configurar .gitignore para excluir arquivos sensíveis
+- [ ] Criar README.md com instruções de instalação e uso

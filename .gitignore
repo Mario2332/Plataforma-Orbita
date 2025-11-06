@@ -105,3 +105,10 @@ temp/
 *.db
 *.sqlite
 *.sqlite3
+
+# Firebase credentials (IMPORTANTE: Nunca commitar credenciais)
+plataforma-teste-manus-firebase-adminsdk-*.json
+server/firebase-admin.ts
+
+# Screenshots
+screenshots/
