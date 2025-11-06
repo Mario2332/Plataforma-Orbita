@@ -112,3 +112,4 @@ server/firebase-admin.ts
 
 # Screenshots
 screenshots/
+server/firebase-credentials.json
